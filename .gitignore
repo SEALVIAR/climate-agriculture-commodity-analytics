@@ -22,9 +22,7 @@ Thumbs.db
 download_log.csv
 
 # Large/raw data
-data/raw/*
-!data/raw/.gitkeep
-!data/raw/*.xls
+# data/raw/*
 
 # Keep folder structure
 !data/raw/.gitkeep
