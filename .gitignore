@@ -23,7 +23,8 @@ download_log.csv
 
 # Large/raw data
 data/raw/*
-data/processed/*.csv
+!data/raw/.gitkeep
+!data/raw/*.xls
 
 # Keep folder structure
 !data/raw/.gitkeep
