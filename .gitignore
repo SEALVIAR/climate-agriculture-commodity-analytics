@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+download_log.csv
+
+# Large/raw data
+data/raw/*
+data/processed/*.csv
+
+# Keep folder structure
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Allow selected sample files
+!data/processed/sample_*.csv
+!data/processed/berkeley_countries_to_download.csv
+
+# Power BI large files
+*.pbix
+
+# Build/distribution
+build/
+dist/
+*.egg-info/
+
+# Testing/cache
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
