@@ -1,0 +1,31 @@
+"commodity_description","data_type","commodity_name","id_commodity"
+"Bananas, Central American and Ecuador, FOB U.S. Ports, US$ per metric ton","USD","PBANSOP",1
+"Barley, Canadian no.1 Western Barley, spot price, US$ per metric ton","USD","PBARL",2
+"Beef, Australian and New Zealand 85% lean fores, CIF U.S. import price, US cents per pound","USD","PBEEF",3
+"Cocoa beans, International Cocoa Organization cash price, CIF US and European ports, US$ per metric ton","USD","PCOCO",4
+"Coffee, Robusta, International Coffee Organization New York cash price, ex-dock New York, US cents per pound","USD","PCOFFROB",5
+"Rapeseed oil, crude, fob Rotterdam, US$ per metric ton","USD","PROIL",6
+"Cotton, Cotton Outlook 'A Index', Middling 1-3/32 inch staple, CIF Liverpool, US cents per pound","USD","PCOTTIND",7
+"Groundnuts (peanuts), 40/50 (40 to 50 count per ounce), cif Argentina, US$ per metric ton","USD","PGNUTS",8
+"Hides, Heavy native steers, over 53 pounds, wholesale dealer's price, US, Chicago, fob Shipping Point, US cents per pound","USD","PHIDE",9
+"Lamb, frozen carcass Smithfield London, US cents per pound","USD","PLAMB",10
+"Maize (corn), U.S. No.2 Yellow, FOB Gulf of Mexico, U.S. price, US$ per metric ton","USD","PMAIZMT",11
+"Olive Oil, extra virgin less than 1% free fatty acid, ex-tanker price U.K., US$ per metric ton","USD","POLVOIL",12
+"Palm oil, Malaysia Palm Oil Futures (first contract forward) 4-5 percent FFA, US$ per metric ton","USD","PPOIL",13
+"Swine (pork), 51-52% lean Hogs, U.S. price, US cents per pound.","USD","PPORK",14
+"Poultry (chicken), Whole bird spot price, Ready-to-cook, whole, iced, Georgia docks, US cents per pound","USD","PPOULT",15
+"Rice, 5 percent broken milled white rice, Thailand nominal price quote, US$ per metric ton","USD","PRICENPQ",16
+"Rubber, Singapore Commodity Exchange, No. 3 Rubber Smoked Sheets, 1st contract, US cents per pound","USD","PRUBB",17
+"Soybean Oil, Chicago Soybean Oil Futures (first contract forward) exchange approved grades, US$ per metric ton","USD","PSOIL",18
+"Soybeans, U.S. soybeans, Chicago Soybean futures contract (first contract forward) No. 2 yellow and par, US$ per metric ton","USD","PSOYB",19
+"Sugar, Free Market, Coffee Sugar and Cocoa Exchange (CSCE) contract no.11 nearest future position, US cents per pound","USD","PSUGAISA",20
+"Sunflower oil, Sunflower Oil, US export price from Gulf of Mexico, US$ per metric ton","USD","PSUNO",21
+"Tea, Mombasa, Kenya, Auction Price, US cents per kilogram, From July 1998,Kenya auctions, Best Pekoe Fannings. Prior, London auctions, c.i.f. U.K. warehouses","USD","PTEA",22
+"Wheat, No.1 Hard Red Winter, ordinary protein, Kansas City, US$ per metric ton","USD","PWHEAMT",23
+"Generic 1st 'O ' Future, USD/bushel","USD","POATS",24
+"Sorghum; U.S., Number 2 yellow, fob Gulf of Mexico, US cents per pound","USD","PSORG",25
+"Wool, coarse, 23 micron, Australian Wool Exchange spot quote, US cents per kilogram","USD","PWOOLC",26
+"Monthly average consumer prices in metropolitan France - Tomatoes (1 Kg), EUR","USD","PTOMATO",27
+"USDA Class 3 (formerly known as Basic Formula) Milk Spot Price, USD/cwt","USD","PMILK",28
+"MCX India Chana Spot, INR/100 Kgs","USD","PCHANA",29
+"Monthly average consumer prices in metropolitan France - Apples (1 Kg), EUR","USD","PAPPLE",30
