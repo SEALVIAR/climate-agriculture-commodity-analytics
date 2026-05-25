@@ -1,0 +1,31 @@
+commodity_description,data_type,Commodity_name,item_code,cpc_item_code,item
+"Bananas, Central American and Ecuador, FOB U.S. Ports, US$ per metric ton",USD,PBANSOP,486,'01312,Bananas
+"Barley, Canadian no.1 Western Barley, spot price, US$ per metric ton",USD,PBARL,44,'0115,Barley
+"Beef, Australian and New Zealand 85% lean fores, CIF U.S. import price, US cents per pound",USD,PBEEF,867,'21111.01,"Meat of cattle with the bone, fresh or chilled"
+"Cocoa beans, International Cocoa Organization cash price, CIF US and European ports, US$ per metric ton",USD,PCOCO,661,'01640,Cocoa beans
+"Coffee, Robusta, International Coffee Organization New York cash price, ex-dock New York, US cents per pound",USD,PCOFFROB,656,'01610,"Coffee, green"
+"Rapeseed oil, crude, fob Rotterdam, US$ per metric ton",USD,PROIL,271,'21641.01,"Rapeseed or canola oil, crude"
+"Cotton, Cotton Outlook 'A Index', Middling 1-3/32 inch staple, CIF Liverpool, US cents per pound",USD,PCOTTIND,767,'01921.02,"Cotton lint, ginned"
+"Groundnuts (peanuts), 40/50 (40 to 50 count per ounce), cif Argentina, US$ per metric ton",USD,PGNUTS,242,'0142,"Groundnuts, excluding shelled"
+"Hides, Heavy native steers, over 53 pounds, wholesale dealer's price, US, Chicago, fob Shipping Point, US cents per pound",USD,PHIDE,919,'02951.01,Raw hides and skins of cattle
+"Lamb, frozen carcass Smithfield London, US cents per pound",USD,PLAMB,977,'21115,"Meat of sheep, fresh or chilled"
+"Maize (corn), U.S. No.2 Yellow, FOB Gulf of Mexico, U.S. price, US$ per metric ton",USD,PMAIZMT,56,'0112,Maize (corn)
+"Olive Oil, extra virgin less than 1% free fatty acid, ex-tanker price U.K., US$ per metric ton",USD,POLVOIL,261,'2167,Olive oil
+"Palm oil, Malaysia Palm Oil Futures (first contract forward) 4-5 percent FFA, US$ per metric ton",USD,PPOIL,257,'2165,Palm oil
+"Swine (pork), 51-52% lean Hogs, U.S. price, US cents per pound.",USD,PPORK,1035,'21113.01,"Meat of pig with the bone, fresh or chilled"
+"Poultry (chicken), Whole bird spot price, Ready-to-cook, whole, iced, Georgia docks, US cents per pound",USD,PPOULT,1058,'21121,"Meat of chickens, fresh or chilled"
+"Rice, 5 percent broken milled white rice, Thailand nominal price quote, US$ per metric ton",USD,PRICENPQ,27,'0113,Rice
+"Rubber, Singapore Commodity Exchange, No. 3 Rubber Smoked Sheets, 1st contract, US cents per pound",USD,PRUBB,836,'01950.01,Natural rubber in primary forms
+"Soybean Oil, Chicago Soybean Oil Futures (first contract forward) exchange approved grades, US$ per metric ton",USD,PSOIL,237,'2161,Soya bean oil
+"Soybeans, U.S. soybeans, Chicago Soybean futures contract (first contract forward) No. 2 yellow and par, US$ per metric ton",USD,PSOYB,236,'0141,Soya beans
+"Sugar, Free Market, Coffee Sugar and Cocoa Exchange (CSCE) contract no.11 nearest future position, US cents per pound",USD,PSUGAISA,162,'2351f,Raw cane or beet sugar (centrifugal only)
+"Sunflower oil, Sunflower Oil, US export price from Gulf of Mexico, US$ per metric ton",USD,PSUNO,268,'21631.01,"Sunflower-seed oil, crude"
+"Tea, Mombasa, Kenya, Auction Price, US cents per kilogram, From July 1998,Kenya auctions, Best Pekoe Fannings. Prior, London auctions, c.i.f. U.K. warehouses",USD,PTEA,667,'01620,Tea leaves
+"Wheat, No.1 Hard Red Winter, ordinary protein, Kansas City, US$ per metric ton",USD,PWHEAMT,15,'0111,Wheat
+"Generic 1st 'O ' Future, USD/bushel",USD,POATS,75,'0117,Oats
+"Sorghum; U.S., Number 2 yellow, fob Gulf of Mexico, US cents per pound",USD,PSORG,83,'0114,Sorghum
+"Wool, coarse, 23 micron, Australian Wool Exchange spot quote, US cents per kilogram",USD,PWOOLC,987,'02941,"Shorn wool, greasy, including fleece-washed shorn wool"
+"Monthly average consumer prices in metropolitan France - Tomatoes (1 Kg), EUR",USD,PTOMATO,388,'01234,Tomatoes
+"USDA Class 3 (formerly known as Basic Formula) Milk Spot Price, USD/cwt",USD,PMILK,882,'02211,Raw milk of cattle
+"MCX India Chana Spot, INR/100 Kgs",USD,PCHANA,191,'01703,"Chick peas, dry"
+"Monthly average consumer prices in metropolitan France - Apples (1 Kg), EUR",USD,PAPPLE,515,'01341,Apples
