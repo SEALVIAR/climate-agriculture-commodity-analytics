@@ -11,9 +11,11 @@ The project uses three public data sources:
 
 * **Berkeley Earth**: historical temperature data by country.
 * **FAOSTAT**: agricultural production data by country, crop and year.
-* **IMF / Pinky Rose**: international commodity price data.
+* **IMF Primary Commodity Prices**: international commodity price data.
 
 The analysis focuses on the period **1990–2015**, because it allowed the three sources to be compared within a common time range.
+
+The `data/` folder contains representative raw samples, auxiliary mapping tables, cleaned datasets and exported Data Warehouse tables.
 
 ## What We Built
 
@@ -36,27 +38,16 @@ Some of the main findings were:
 
 ## Repository Structure
 
-
-
-| Folder | Description |
-
-|---|---|
-
-| `data/` | Clean datasets |
-
-| `docs/` | Final report and documentation |
-
-| `images/` | Dashboard screenshots and diagrams |
-
-| `knime/` | KNIME workflow |
-
-| `notebooks/` | Python analysis and machine learning notebooks |
-
-| `powerbi/` | Power BI dashboard file |
-
-| `sql/` | Data Warehouse SQL scripts |
-
-| `src/etl/` | Python ETL scripts |
+|Folder|Description|
+|-|-|
+|`data/`|Raw samples, auxiliary tables, clean datasets and exported Data Warehouse tables|
+|`docs/`|Final report and documentation|
+|`images/`|Dashboard screenshots and diagrams|
+|`knime/`|KNIME workflow|
+|`notebooks/`|Python analysis and machine learning notebooks|
+|`powerbi/`|Power BI dashboard file|
+|`sql/`|Data Warehouse SQL scripts|
+|`src/etl/`|Python ETL scripts|
 
 
 
