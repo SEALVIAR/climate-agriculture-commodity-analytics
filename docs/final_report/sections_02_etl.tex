@@ -1,0 +1,9 @@
+\section{Parte 1. Procesos de Extracción, Transformación y Carga - ETL}
+
+\noindent Como parte de la \underline{descripción del proceso seguido}, y como se ha mencionado anteriormente, fueron utilizadas tres fuentes de datos (Berkeleyn Earth, FAOSTAT, Pinky Rose FIM), de las cuales los datos se encontraban dispersos, con diferencias en su estructura, inconsistencias en su presentación, dificultades en la calidad, entre otros.
+
+\noindent Por parte de \textbf{Berkeley Earth}, fueron obtenidos 164 archivos .txt con información climática correspondiente a 164 países. Al analizar la estructura interna de estos documentos, tomando como caso de estudio el archivo united-states.txt (Estados Unidos), identificamos las siguientes características y retos para su procesamiento
+\begin{itemize}
+    \item \textbf{Metadatos integrados:} El archivo no inicia directamente con la tabla de datos, sino con un extenso encabezado de texto (comentado con el símbolo \%). Este bloque explica la metodología de medición, indicando que las temperaturas están en grados Celsius y se reportan como anomalías en relación con el promedio histórico del periodo 1951-1980 (para el caso de Estados Unidos). En el proceso ETL, este encabezado debió ser filtrado para poder leer la matriz de datos.
+    \item \textbf{Estructura del archivo:} Los datos no están separados por comas (como en un CSV tradicional), sino por espacios en blanco tabulados. La tabla contiene múltiples columnas, de las cuales identificamos como críticas para nuestro modelo: el Año (Year), el Mes (Month), la Anomalía Mensual (Monthly Anomaly) y la Incertidumbre Mensual (Monthly Uncertainty).
+\end{itemize}
