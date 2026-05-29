@@ -16,6 +16,80 @@
     	
     	\vspace{0.2cm}
     	\footnotesize Fuente: Elaboración propia con base en datos de Berkeley Earth.
-    \end{figure}
-    Para convertir estos datos planos en una tabla estructurada, y poder analizar la información asertivamente, fueron desarrollados los siguientes scripts en Python que denominamos \textbf{01\_country\_name\_mapping.py}, \textbf{02\_download\_berkeley\_files.py} y \textbf{03\_transform\_berkeley\_txt.py} (Scripts ETL), los cuales se encargaron de automatizar la extracción, estructurar el contenido y resolver problemas de calidad de datos: 
+    \end{figure} 
 \end{itemize}
+Para convertir estos datos planos en una tabla estructurada, y poder analizar la información asertivamente, fueron desarrollados los siguientes scripts en Python que denominamos \textbf{01\_country\_name\_mapping.py}, \textbf{02\_download\_berkeley\_files.py} y \textbf{03\_transform\_berkeley\_txt.py} (Scripts ETL), los cuales se encargaron de automatizar la extracción, estructurar el contenido y resolver problemas de calidad de datos:
+\begin{itemize}
+	\item \textbf{01\_country\_name\_mapping.py (Homologación y estandarización geográfica): }
+	Este script fue desarrollado para resolver uno de los principales retos de integración entre fuentes heterogéneas: la diferencia en los nombres de países entre Berkeley Earth y FAOSTAT. Por ejemplo, mientras una fuente podía registrar \textit{United States}, la otra utilizaba \textit{United States of America}. Para evitar la pérdida de registros al cruzar las tablas, el script compara ambos catálogos de países, identifica coincidencias directas y analiza los casos restantes mediante técnicas de \textit{Fuzzy Matching} con la librería \texttt{rapidfuzz}. Además, se incorporó una validación manual para corregir casos particulares y establecer equivalencias confiables entre ambas fuentes. Gracias a este proceso, fue posible definir un conjunto coherente de países para la descarga de información climática y fortalecer la consistencia de la dimensión geográfica del Data Warehouse. 
+	
+	\item \textbf{02\_download\_berkeley\_files.py (Automatización de la extracción): }
+	Dado que descargar manualmente los archivos climáticos por país desde Berkeley Earth era un proceso ineficiente, este script fue desarrollado para automatizar la recolección de la información. El código parte de una lista de países previamente seleccionados y aplica un proceso de normalización de texto para construir el \textit{slug} necesario en la URL de descarga, convirtiendo los nombres a minúsculas, eliminando tildes o caracteres especiales y reemplazando espacios por guiones. Posteriormente, el script construye la URL correspondiente para cada país, realiza la solicitud al servidor mediante una sesión HTTP y guarda los archivos \texttt{.txt} en una carpeta local. Además, verifica si cada archivo ya existe antes de descargarlo nuevamente, lo que permite optimizar el tiempo de ejecución y evitar descargas duplicadas.
+	
+	\item \textbf{03\_transform\_berkeley\_txt.py (Transformación y estructuración en KNIME): } Este script opera dentro del flujo de KNIME y tiene como objetivo convertir los archivos climáticos \texttt{.txt} de Berkeley Earth en una tabla estructurada. Para ello, recibe desde KNIME la ruta del archivo, normaliza dicha ruta y lee el contenido del documento. Posteriormente, extrae el nombre del país desde el encabezado del archivo y obtiene la línea base mensual de temperatura, necesaria para calcular la temperatura absoluta. Luego recorre los registros numéricos, filtra el periodo de análisis entre 1990 y 2015, extrae el año, el mes, la anomalía térmica y la incertidumbre mensual, y calcula la temperatura absoluta sumando la anomalía a la línea base correspondiente. Finalmente, organiza estos resultados en un \textit{DataFrame} con las columnas \texttt{Country}, \texttt{Year}, \texttt{Month}, \texttt{Anomaly\_temp}, \texttt{Unc\_temp} y \texttt{Abs\_temperature\_c}, el cual es devuelto como tabla de salida para continuar el proceso ETL en KNIME.
+\end{itemize}
+En cuanto a FAOSTAT, la información fue extraída descargando directamente la sábana de datos global desde su portal oficial, consolidada en el archivo .csv denominado faostat\_data.csv. Al explorar este conjunto de datos, encontramos un escenario estructural muy distinto al de los archivos de texto de Berkeley, el cual nos planteó los siguientes retos para el proceso ETL: 
+\begin{itemize}
+	\item \textbf{Elección de los distintos productos a analizar: }Dado que la fuente original contenía cerca de 300 ítems distintos entre cultivos y animales, fue necesario realizar un proceso manual de depuración y asociación. Esto se debió a que no todos los ítems podían vincularse directamente con al menos un commodity de Pinky Rose. Por ello, se extrajeron los distintos productos de la fuente y se estableció manualmente la correspondencia entre cada commodity y su respectivo cultivo o animal.
+	
+	\item \textbf{Estructura ``Ancha'' (Wide Format) y factor temporal}: El principal desafío analítico de este archivo es que el tiempo no está modelado como una variable en una sola columna, sino como múltiples columnas. Los registros de cada año aparecen extendidos horizontalmente hacia la derecha con el prefijo ``Y'' (ej. las columnas Y1961, Y1962... hasta los años más recientes). Para que esta información pudiera relacionarse con la dimensión temporal (dim\_time) de nuestro Data Warehouse, era estrictamente necesario aplicar el nodo de Unpivoting en KNIME para transponer estas columnas y lograr un formato transaccional estándar, donde el ``Año'' quede en una columna y el valor numérico en otra. 
+	
+	\item \textbf{Complejidad Semántica (Múltiples métricas integradas):} Observamos que el archivo contiene las columnas Element y Unit. Esto significa que los números reportados no representan una única métrica estándar. Dependiendo de la fila, el valor numérico puede significar ``Producción'' (medida en toneladas t), ``Rendimiento'', o ``Área Cosechada''. Esta particularidad nos obligó a ser muy cuidadosos en el modelado, justificando la necesidad de crear una dimensión adicional (dim\_element) para darle el contexto correcto a la tabla de hechos y evitar sumar magnitudes incompatibles en los dashboards. 
+	
+	\item \textbf{Granularidad de los datos:} Dado que los registros de FAOSTAT se presentan únicamente con periodicidad anual, fue necesario incorporar una columna Month con el valor predeterminado 0. De este modo, en la tabla de dimensiones temporal estos registros pueden identificarse como correspondientes a ``All Year''.
+	
+	\item \textbf{Filtro por años:} Con el fin de garantizar la comparabilidad entre los distintos conjuntos de datos y evitar la inclusión de fechas no homogéneas, se optó por aplicar el mismo rango temporal empleado en Berkeley Earth, considerando únicamente los registros comprendidos entre 1990 y 2015.
+	
+	\item \textbf{Redundancia de códigos para identificación:} El dataset original está sobrecargado de identificadores para un mismo atributo. Por ejemplo, trae Area Code y Area Code (M49) los países, así como Item Code e Item Code (CPC) para los productos. En la fase de limpieza en KNIME, procedimos a filtrar todas estas columnas redundantes para aligerar la carga de procesamiento, conservando únicamente los nombres en texto limpio (Area e Item) y descarcantando las columnas Area Code (M49) e Item Code (CPC).
+\end{itemize}
+Finalmente, para integrar la variable económica al modelo (Pinky Rose FIM), utilizamos los registros de precios internacionales provenientes del archivo fim\_data.xls. Al realizar la exploración de este conjunto de datos, identificamos particularidades estructurales que requirieron un tratamiento ETL específico en KNIME para poder acoplarlos a nuestra arquitectura: 
+\begin{itemize}
+	\item \textbf{Formato de series de tiempo combinadas:} A diferencia de las otras fuentes, cada fila de este archivo representa un periodo de tiempo, pero la fecha viene concatenada en un formato de texto alfanumérico en la primera columna (por ejemplo, 2026M2 para indicar febrero de 2026). Para poder enlazar estos datos con nuestra dimensión temporal (dim\_time), fue necesario aplicar nodos de manipulación de texto (String Manipulation o Regex Split) para separar matemáticamente el ``Año'' y el ``Mes'' en dos columnas enteras independientes. 
+	
+	\item \textbf{Estructura ``Ancha'' orientada a productos:} Los diferentes commodities agrícolas (trigo, maíz, café, etc.) no están en una sola columna, sino que cada producto es una columna independiente encabezada por su código técnico (ej. PMAIZMT, PCOFFOTM). Esto requirió ejecutar nuevamente un proceso de Unpivoting en KNIME. Al transponer los datos, logramos que todos los nombres bajaran a una columna llamada Commodity Name y todos los valores a una columna Commodity Value. 
+	
+	\item \textbf{Filtro por años:} Con el fin de garantizar la comparabilidad entre los distintos conjuntos de datos y evitar la inclusión de fechas no homogéneas, se optó por aplicar el mismo rango temporal empleado en Berkeley Earth, considerando únicamente los registros comprendidos entre 1990 y 2015.
+	
+	\item \textbf{Filtro de commodities asociados a un item:} Dado que no todos los commodities están relacionados con un cultivo o un animal, fue necesario excluir aquellos vinculados a categorías no pertinentes para el análisis, como combustibles y metales. Una vez realizada la asociación manual en el dataset de FAOSTAT, se procedió a filtrar únicamente los commodities que resultaban utilizables.
+	
+	\item \textbf{Ausencia de Granularidad Geográfica: }Un hallazgo analítico clave durante la exploración fue constatar que esta fuente no contiene información por país. Los valores reportados son índices y precios de cotización en el mercado global. Esta característica de los datos fue la que determinó y justificó nuestra decisión arquitectónica en el esquema de constelación: la tabla de hechos de mercado (fact\_commodity) no se conecta a la dimensión de geografía, asumiendo el precio como un factor macroeconómico que afecta a todos los países por igual. 
+	
+	\item \textbf{Limpieza de Metadatos incrustados: }El archivo contenía filas iniciales que no eran datos numéricos, sino descripciones en texto de los códigos (ej. la fila Commodity.Description). Utilizamos nodos de filtrado de filas (Row Filter) para descartar esta ``basura'' de la cabecera antes de procesar los números y evitar errores de tipo de dato (Type Mismatch) al enviarlos a la base de datos relacional. 
+\end{itemize}
+Así las cosas, a través de KNIME, se realizó el siguiente flujo:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{berkeley_etl_flow.png}
+	\caption{Flujo en KNIME para la limpieza de datos Berkeley Earth.}
+	\label{fig:berkeley-flow-etl}
+	\vspace{0.2cm}
+	\footnotesize Fuente: Elaboración propia con KNIME.
+\end{figure}  
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{faostat_etl_flow.png}
+	\caption{Flujo en KNIME para la limpieza de datos FAOSTAT.}
+	\label{fig:faostat-flow-etl}
+	\vspace{0.2cm}
+	\footnotesize Fuente: Elaboración propia con KNIME.
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{imf_etl_flow.png}
+	\caption{Flujo en KNIME para la limpieza de datos FMI.}
+	\label{fig:fmi-flow-etl}
+	\vspace{0.2cm}
+	\footnotesize Fuente: Elaboración propia con KNIME.
+\end{figure}
+\noindent Una vez descargadas y revisadas las tres fuentes de datos, el proceso ETL fue organizado en KNIME mediante varios subflujos, cada uno orientado a una fuente específica: Berkeley Earth, FAOSTAT e IMF. Además, se incluyeron flujos auxiliares para extraer catálogos únicos y apoyar la homologación de productos o commodities entre las distintas bases. La idea general del flujo fue llevar datos que inicialmente estaban dispersos, con formatos diferentes y estructuras poco compatibles, hacia archivos limpios y estandarizados que después pudieran integrarse de forma más clara en el Data Warehouse. 
+
+\noindent Producto de lo anterior, se generaron tres archivos .csv denominados ``berkeley\_clean'', ``faostat\_clean'' y ``imf\_clean'' (adjuntos), los cuales representan la materia prima estandarizada y lista para alimentar nuestro Data Warehouse. Su estructura final consolidada se describe a continuación: 
+\begin{itemize}
+	\item \textbf{berkeley\_clean.csv:} Consolidó los registros climáticos en un formato netamente transaccional. El archivo ahora cuenta con columnas independientes y limpias para el país, el año, el mes, la anomalía térmica y la temperatura absoluta calculada en grados Celsius. Se eliminaron por completo las cabeceras de texto y los valores nulos (NaN) que presentaban los archivos originales.
+	
+	\item \textbf{faostat\_clean.csv: }Este archivo refleja el éxito del proceso de despivotado (Unpivoting). Los más de 60 años que originalmente estaban distribuidos como columnas, se transformaron en una única variable de tiempo (Year), acompañada de su respectivo valor numérico (Value). Además, conserva intactas las columnas descriptivas del país (Area), el producto (Item) y el tipo de métrica (Element y Unit), garantizando que no se pierda el contexto del dato. 
+	
+	\item \textbf{fmi\_clean.csv: }Muestra la corrección exitosa de la estructura de mercado. Por un lado, la variable temporal original se separó matemáticamente en dos columnas enteras independientes (Year y Month). Por otro lado, los distintos códigos de los commodities agrícolas pasaron de ser encabezados de columna a estar listados bajo una única categoría (Commodity Name), emparejados con su precio global mensual correspondiente (Commodity Value). 
+\end{itemize}
+
+\noindent Con la obtención de estos tres archivos limpios, homogéneos y con variables compartidas (como el Año y el País), se dio por concluida la parte 1 de limpieza y carga de los datos. A continuación, se aborda la segunda parte, modelamiento multidimensional del Data Warehouse. 
